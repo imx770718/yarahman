@@ -1,11 +1,14 @@
-name = "yarehman-store"
+
+name = "yarahmaa"
 compatibility_date = "2026-11-08"
 pages_build_output_dir = "./public"
-migrations_dir = "./migrations"
+
 [[d1_databases]]
 binding = "DB"
-database_name = "yarehman-db"
+database_name = "yarahman-db"
 database_id = "27d3b4f1-2098-40fb-8313-8139f571637d"
+migrations_dir = "./migrations"
+
 [[r2_buckets]]
 binding = "IMAGES"
 bucket_name = "yarehman-images"
