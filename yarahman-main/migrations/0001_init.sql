@@ -1,0 +1,13 @@
+PRAGMA foreign_keys=ON;
+CREATE TABLE admins(id INTEGER PRIMARY KEY,username TEXT UNIQUE NOT NULL,password_hash TEXT NOT NULL,salt TEXT NOT NULL,role TEXT DEFAULT 'staff',permissions TEXT DEFAULT '[]',active INTEGER DEFAULT 1,created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE customers(id INTEGER PRIMARY KEY,name TEXT NOT NULL,phone TEXT UNIQUE NOT NULL,email TEXT,password_hash TEXT NOT NULL,salt TEXT NOT NULL,address TEXT DEFAULT '',created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE categories(id INTEGER PRIMARY KEY,name TEXT NOT NULL,image TEXT DEFAULT '',sort_order INTEGER DEFAULT 0,active INTEGER DEFAULT 1);
+CREATE TABLE products(id INTEGER PRIMARY KEY,name TEXT NOT NULL,description TEXT DEFAULT '',category_id INTEGER REFERENCES categories(id),brand TEXT DEFAULT '',price REAL NOT NULL,old_price REAL,stock INTEGER DEFAULT 0,images TEXT DEFAULT '[]',featured INTEGER DEFAULT 0,active INTEGER DEFAULT 1,created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE shipping_zones(id INTEGER PRIMARY KEY,name TEXT NOT NULL,fee REAL DEFAULT 0,active INTEGER DEFAULT 1);
+CREATE TABLE orders(id INTEGER PRIMARY KEY,order_no TEXT UNIQUE NOT NULL,customer_id INTEGER REFERENCES customers(id),customer_name TEXT NOT NULL,phone TEXT NOT NULL,address TEXT NOT NULL,zone_id INTEGER REFERENCES shipping_zones(id),delivery_fee REAL DEFAULT 0,subtotal REAL NOT NULL,total REAL NOT NULL,status TEXT DEFAULT 'new',payment_method TEXT DEFAULT 'cod',notes TEXT DEFAULT '',created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE order_items(id INTEGER PRIMARY KEY,order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,product_id INTEGER REFERENCES products(id),product_name TEXT NOT NULL,price REAL NOT NULL,quantity INTEGER NOT NULL);
+CREATE TABLE offers(id INTEGER PRIMARY KEY,title TEXT NOT NULL,description TEXT DEFAULT '',product_id INTEGER REFERENCES products(id),discount_percent REAL DEFAULT 0,starts_at TEXT,ends_at TEXT,active INTEGER DEFAULT 1);
+CREATE TABLE settings(key TEXT PRIMARY KEY,value TEXT NOT NULL);
+CREATE TABLE pages(id INTEGER PRIMARY KEY,title TEXT NOT NULL,slug TEXT UNIQUE NOT NULL,content TEXT DEFAULT '',active INTEGER DEFAULT 1);
+CREATE TABLE audit_log(id INTEGER PRIMARY KEY,admin_id INTEGER,action TEXT NOT NULL,details TEXT DEFAULT '',created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+INSERT OR IGNORE INTO settings VALUES('store_name','يَارَحْمَنُ يَارَحْمَنُ'),('currency','ر.ي'),('phone',''),('whatsapp',''),('maintenance','false'),('allow_guest','true'),('hero_title','أحدث الجوالات بأفضل الأسعار'),('hero_text','تسوق بثقة وتمتع بعروضنا المميزة');
