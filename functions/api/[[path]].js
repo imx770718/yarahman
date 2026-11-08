@@ -1,6 +1,6 @@
 const te=new TextEncoder(), b64=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
 const out=(d,s=200,h={})=>new Response(JSON.stringify(d),{status:s,headers:{'content-type':'application/json;charset=utf-8','cache-control':'no-store',...h}}), bad=(m,s=400)=>out({error:m},s), read=async r=>{try{return await r.json()}catch{return {}}};
-async function pw(p,s){let k=await crypto.subtle.importKey('raw',te.encode(p),'PBKDF2',false,['deriveBits']);return b64(await crypto.subtle.deriveBits({name:'PBKDF2',salt:te.encode(s),iterations:210000,hash:'SHA-256'},k,256))}
+async function pw(p,s){let k=await crypto.subtle.importKey('raw',te.encode(p),'PBKDF2',false,['deriveBits']);return b64(await crypto.subtle.deriveBits({name:'PBKDF2',salt:te.encode(s),iterations:100000,hash:'SHA-256'},k,256))}
 async function sig(p,e){let k=await crypto.subtle.importKey('raw',te.encode(e.SESSION_SECRET),{name:'HMAC',hash:'SHA-256'},false,['sign']);return b64(await crypto.subtle.sign('HMAC',k,te.encode(p)))}
 async function token(u,e){let p=b64(te.encode(JSON.stringify({...u,exp:Date.now()+86400000})));return p+'.'+await sig(p,e)}
 async function who(r,e){let m=(r.headers.get('cookie')||'').match(/(?:^|; )ys=([^;]+)/);if(!m||!e.SESSION_SECRET)return null;let [p,s]=m[1].split('.');if(await sig(p,e)!==s)return null;try{let x=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(p.replace(/-/g,'+').replace(/_/g,'/')+'==='.slice((p.length+3)%4)),c=>c.charCodeAt(0))));return x.exp>Date.now()?x:null}catch{return null}}
