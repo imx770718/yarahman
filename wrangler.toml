@@ -5,7 +5,7 @@ migrations_dir = "./migrations"
 [[d1_databases]]
 binding = "DB"
 database_name = "yarehman-db"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "27d3b4f1-2098-40fb-8313-8139f571637d"
 [[r2_buckets]]
 binding = "IMAGES"
 bucket_name = "yarehman-images"
